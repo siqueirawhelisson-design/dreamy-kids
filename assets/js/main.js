@@ -436,10 +436,7 @@
       return function () { if (temRato) hero.removeEventListener("pointermove", mover); parar(); };
     });
 
-    // Estrelas do cinema (só em ecrãs grandes: no telemóvel obrigava a repintar a secção inteira a cada frame)
-    mm.add("(min-width: 900px)", function () {
-      gsap.to(".cinema__ceu", { backgroundPosition: "0 120px", ease: "none", scrollTrigger: { trigger: ".cinema", start: "top bottom", end: "bottom top", scrub: true } });
-    });
+    // (o céu estrelado do cinema fica estático: animá-lo com o scroll repintava a secção inteira a cada frame)
 
     window.addEventListener("load", function () { ST.refresh(); });
     document.documentElement.classList.remove("pre");
@@ -465,8 +462,10 @@
         var a = pts[i - 1], b = pts[i], dy = (b.y - a.y) * 0.5;
         d += " C" + a.x + " " + (a.y + dy) + " " + b.x + " " + (b.y - dy) + " " + b.x + " " + b.y;
       }
-      svg.setAttribute("viewBox", "0 0 " + W + " " + main.scrollHeight);
-      svg.style.height = main.scrollHeight + "px";
+      // a camada do desenho só tem a altura da linha (antes tinha a página inteira, ~15 000 px)
+      var alto = Math.ceil(pts[pts.length - 1].y + 60);
+      svg.setAttribute("viewBox", "0 0 " + W + " " + alto);
+      svg.style.height = alto + "px";
       base.setAttribute("d", d); linha.setAttribute("d", d);
       len = linha.getTotalLength();
       linha.style.strokeDasharray = len; linha.style.strokeDashoffset = len;
