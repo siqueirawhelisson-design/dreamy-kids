@@ -211,7 +211,7 @@
   /* ---------- Rodapé, botão flutuante, painel de revisão, dados estruturados ---------- */
   function renderGeral() {
     var ct = DK.contacto, li = [];
-    if (wa) li.push('<li><a href="' + linkWA("Olá Dreamy Kids!") + '" target="_blank" rel="noopener">WhatsApp</a></li>');
+    if (wa) li.push('<li><a href="' + linkWA(msgCurta("outro")) + '" target="_blank" rel="noopener">WhatsApp</a></li>');
     if (ct.telefone) li.push('<li><a href="tel:' + ct.telefone.replace(/\s/g, "") + '">' + esc(ct.telefone) + "</a></li>");
     if (ct.email) li.push('<li><a href="mailto:' + esc(ct.email) + '">' + esc(ct.email) + "</a></li>");
     if (ct.instagram) li.push('<li><a href="https://instagram.com/' + esc(ct.instagram) + '" target="_blank" rel="noopener">@' + esc(ct.instagram) + "</a></li>");
@@ -221,7 +221,7 @@
 
     var fl = $("#flutuante");
     if (wa) {
-      fl.href = linkWA("Olá Dreamy Kids! Gostava de saber mais sobre as vossas festas.");
+      fl.href = linkWA(msgCurta("outro"));
       fl.target = "_blank"; fl.rel = "noopener"; fl.removeAttribute("data-reservar");
       fl.setAttribute("aria-label", "Falar com a Dreamy Kids no WhatsApp");
       fl.classList.add("flutuante--wa");
