@@ -212,27 +212,29 @@ main > section { position: relative; z-index: 1; max-width: var(--max); margin: 
 .hero__cena { position: absolute; top: 92px; bottom: 0; right: calc(50% - 50vw); width: 60vw; pointer-events: none; }
 .hero__cena .obj, .hero__cena .nv { pointer-events: auto; }
 .hero__aura {
-  position: absolute; inset: 6% 0 12% 6%; filter: blur(12px);
+  position: absolute; inset: 6% 0 12% 6%; /* sem filter: blur, os gradientes já são suaves e o desfoque custava caro */
   background:
     radial-gradient(42% 48% at 50% 46%, rgba(233, 216, 255, .9), rgba(233, 216, 255, 0) 70%),
     radial-gradient(28% 34% at 82% 38%, rgba(205, 238, 255, .85), rgba(205, 238, 255, 0) 70%),
     radial-gradient(30% 34% at 22% 64%, rgba(255, 214, 236, .85), rgba(255, 214, 236, 0) 70%);
 }
-.hero__fitas { position: absolute; left: -6%; top: 4%; width: 108%; height: auto; overflow: visible; }
+.hero__fitas { position: absolute; left: -6%; top: 4%; width: 108%; height: auto; overflow: visible; will-change: transform; } /* camada própria: o parallax move-a sem repintar as fitas */
 .fita { fill: none; stroke: url(#g-fita); stroke-linecap: round; }
 .fita--1 { stroke-width: 44; opacity: .55; }
 .fita--2 { stroke-width: 20; opacity: .5; }
-.fita-brilho { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; opacity: .9; stroke-dasharray: 80 1400; animation: fita 7s linear infinite; }
+.fita-brilho { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; opacity: .9; stroke-dasharray: 80 1400; animation: fita 7s linear 2; } /* duas passagens e para: em loop repintava a cena inteira */
 @keyframes fita { to { stroke-dashoffset: -1480; } }
 
 .hero__criancas, .hero__fx { position: absolute; left: -3%; width: 106%; bottom: 8%; aspect-ratio: 1600 / 893; }
-.hero__criancas { display: block; mix-blend-mode: multiply; }
+.hero__criancas { display: block; } /* imagem já com fundo transparente: sem mix-blend-mode, que obrigava a repintar a cena a cada frame */
 .hero__criancas img, .clone { -webkit-mask-image: linear-gradient(to bottom, #000 76%, transparent 98%); mask-image: linear-gradient(to bottom, #000 76%, transparent 98%); }
 .hero__criancas img { display: block; width: 100%; }
 
 /* Recortes da própria fotografia, alinhados ao píxel, que se mexem por cima do original */
-.clone { position: absolute; inset: 0; background: url("../img/hero-criancas.webp") 0 0 / 100% 100% no-repeat; pointer-events: none; }
-.clone--slime { clip-path: polygon(9% 48%, 14% 43%, 18% 52%, 23% 60%, 30% 64%, 37% 64%, 41% 66%, 41% 72%, 35% 76%, 27% 75%, 19% 68%, 13% 60%, 9% 55%); filter: url(#f-gosma); }
+.clone { position: absolute; inset: 0; background: url("../img/hero-criancas.webp") 0 0 / 100% 100% no-repeat; pointer-events: none; visibility: hidden; }
+.clone.ativo { visibility: visible; } /* só aparecem durante o efeito */
+.clone--slime { clip-path: polygon(9% 48%, 14% 43%, 18% 52%, 23% 60%, 30% 64%, 37% 64%, 41% 66%, 41% 72%, 35% 76%, 27% 75%, 19% 68%, 13% 60%, 9% 55%); }
+.clone--slime.ativo { filter: url(#f-gosma); } /* o filtro de ondulação só existe enquanto o efeito corre */
 .pe1 { clip-path: ellipse(1.75% 3.1% at 55.1% 49.3%); transform-origin: 55.1% 49.3%; }
 .pe2 { clip-path: ellipse(1.8% 3.2% at 60.1% 50%); transform-origin: 60.1% 50%; }
 .fo1 { clip-path: ellipse(2.1% 7.2% at 72.3% 38%); transform-origin: 72.3% 38%; }
@@ -272,6 +274,7 @@ main > section { position: relative; z-index: 1; max-width: var(--max); margin: 
 @keyframes brilha { 0%, 100% { opacity: .35; transform: scale(.75); } 50% { opacity: 1; transform: scale(1.1); } }
 
 .hero__o { position: absolute; z-index: 2; }
+.hero__cena > .obj[data-depth] { will-change: transform; } /* parallax no compositor */
 .hero__o > svg { animation: flutua 6s ease-in-out infinite; }
 .hero__o--comando { top: 3%; right: 13%; width: 15%; }
 .hero__o--comando > svg { animation-name: flutua2; animation-duration: 7s; }

@@ -91,9 +91,10 @@
       confettis(21, 4, 16); confettis(60, 4, 16);
     },
     slime: function () { // a gosma ondula e regressa com elasticidade
-      var mapa = $("#gosma-mapa"), ruido = $("#gosma-ruido");
+      var mapa = $("#gosma-mapa"), ruido = $("#gosma-ruido"), clone = $(".clone--slime");
       gsap.killTweensOf([mapa, ruido]);
-      gsap.timeline()
+      clone.classList.add("ativo");
+      gsap.timeline({ onComplete: function () { clone.classList.remove("ativo"); } })
         .to(mapa, { attr: { scale: 22 }, duration: 0.3, ease: "power2.out" })
         .to(ruido, { attr: { baseFrequency: "0.02 0.05" }, duration: 0.9, ease: "sine.inOut" }, 0)
         .to(mapa, { attr: { scale: 0 }, duration: 1.4, ease: "elastic.out(1, 0.3)" })
@@ -110,7 +111,10 @@
       brilhos([[52, 44], [57.5, 41], [63, 45], [55, 56], [61, 57]], "#A6E3A1");
     },
     fone: function () { // os auscultadores pulsam ao ritmo e saem notas
-      pulso($$(".clone--fone"), 3, 1.1);
+      var fones = $$(".clone--fone");
+      fones.forEach(function (c) { c.classList.add("ativo"); });
+      setTimeout(function () { fones.forEach(function (c) { c.classList.remove("ativo"); }); }, 950);
+      pulso(fones, 3, 1.1);
       notas(73, 30); setTimeout(function () { notas(88, 29); }, 220);
     },
     comando: function () { // brilho leve à volta das mãos e faíscas suaves, sem mexer a fotografia
@@ -138,7 +142,7 @@
     var cv = $("#rasto");
     if (!cv || !temRato) { if (cv) cv.remove(); return; }
     var hero = $(".hero");
-    var ctx = cv.getContext("2d"), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var ctx = cv.getContext("2d"), dpr = 1; // estrelas pequenas: resolução 1x chega e poupa muito trabalho
     var parts = [], ultimo = null, aCorrer = false;
     var dim = function () { cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
     dim(); addEventListener("resize", dim);

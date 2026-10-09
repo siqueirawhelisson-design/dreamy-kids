@@ -416,10 +416,19 @@
         gsap.fromTo(el, { y: -v * 200 }, { y: v * 200, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true } });
       });
       // Rato no hero
-      var hero = $(".hero"), camadas = $$(".hero__cena [data-depth]");
+      // quickTo reutiliza uma única animação por camada, em vez de criar dezenas de tweens por segundo
+      var hero = $(".hero"), camadas = $$(".hero__cena [data-depth]").map(function (c) {
+        return { d: +c.getAttribute("data-depth"), x: gsap.quickTo(c, "x", { duration: 0.9, ease: "power2.out" }), y: gsap.quickTo(c, "y", { duration: 0.9, ease: "power2.out" }) };
+      });
+      var pedido = false, ex = 0, ey = 0;
       var mover = function (e) {
-        var x = e.clientX / window.innerWidth - 0.5, y = e.clientY / window.innerHeight - 0.5;
-        camadas.forEach(function (c) { var d = +c.getAttribute("data-depth"); gsap.to(c, { x: x * d * 50, y: y * d * 40, duration: 1, ease: "power2.out", overwrite: "auto" }); });
+        ex = e.clientX; ey = e.clientY;
+        if (pedido) return; pedido = true;
+        requestAnimationFrame(function () {
+          pedido = false;
+          var x = ex / window.innerWidth - 0.5, y = ey / window.innerHeight - 0.5;
+          camadas.forEach(function (c) { c.x(x * c.d * 50); c.y(y * c.d * 40); });
+        });
       };
       if (temRato) hero.addEventListener("pointermove", mover);
       // Linha da jornada
