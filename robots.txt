@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+# Acrescentar "Sitemap: https://<dominio>/sitemap.xml" quando o domínio estiver definido.

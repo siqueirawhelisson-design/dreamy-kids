@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dreamy Kids · Festas e experiências infantis</title>
+  <meta name="description" content="Festas de aniversário e experiências infantis num só espaço: spa, slime, gaming, arena dos desafios, arte, personalização e cinema. Onde os sonhos se tornam festas.">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_PT">
+  <meta property="og:site_name" content="Dreamy Kids">
+  <meta property="og:title" content="Dreamy Kids · Onde os sonhos se tornam festas">
+  <meta property="og:description" content="Muito mais do que uma festa. Um mundo de experiências: spa, slime, gaming, desafios, arte, personalização e cinema.">
+  <meta property="og:image" content="assets/img/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Young+Serif&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script>
+    // Esconde a hero até a animação de entrada arrancar; se algo falhar, mostra tudo ao fim de 2,5 s
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("pre");
+      setTimeout(function () { document.documentElement.classList.remove("pre"); }, 2500);
+    }
+  </script>
+  <link rel="preload" as="image" href="assets/img/logo.webp">
+  <link rel="preload" as="image" href="assets/img/hero-criancas.webp" imagesrcset="assets/img/hero-criancas-900.webp 900w, assets/img/hero-criancas.webp 1600w" imagesizes="(max-width: 900px) 110vw, 66vw">
+</head>
+<body>
+  <a class="skip" href="#conteudo">Saltar para o conteúdo</a>
+
+  <!-- Gradientes partilhados pelos objetos SVG -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="g-roxo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B58BF5"/><stop offset="1" stop-color="#7440D0"/></linearGradient>
+      <linearGradient id="g-rosa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF9BCD"/><stop offset="1" stop-color="#EC3A97"/></linearGradient>
+      <linearGradient id="g-azul" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#93E0FC"/><stop offset="1" stop-color="#22A9E6"/></linearGradient>
+      <linearGradient id="g-amar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE59A"/><stop offset="1" stop-color="#FFB02E"/></linearGradient>
+      <linearGradient id="g-slime" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FE3FF"/><stop offset=".5" stop-color="#C69CFF"/><stop offset="1" stop-color="#FF9AD0"/></linearGradient>
+      <linearGradient id="g-arco" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#EC3A97"/><stop offset=".35" stop-color="#8B52E0"/><stop offset=".7" stop-color="#22B5EE"/><stop offset="1" stop-color="#FFBE3D"/></linearGradient>
+      <linearGradient id="g-nuvem" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EFE6FF"/></linearGradient>
+      <filter id="f-gosma" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence id="gosma-ruido" type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" seed="3" result="n"/><feDisplacementMap id="gosma-mapa" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+      <radialGradient id="g-brilho" cx=".35" cy=".3" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    </defs>
+  </svg>
+
+  <header class="topo" id="topo">
+    <div class="topo__in">
+      <a class="topo__logo" href="#inicio" aria-label="Dreamy Kids, voltar ao início">
+        <img src="assets/img/logo.webp" alt="Dreamy Kids, Party & Experience" width="800" height="482">
+      </a>
+      <nav class="topo__nav" aria-label="Principal">
+        <a href="#experiencias">Experiências</a>
+        <a href="#packs">Packs</a>
+        <a href="#cinema">Cinema</a>
+        <a href="#fundadoras">Quem somos</a>
+        <a href="#faq">Perguntas</a>
+      </nav>
+      <a class="btn btn--primario btn--sm topo__cta" href="#reservar" data-reservar>Reservar festa</a>
+      <button class="topo__menu" aria-expanded="false" aria-controls="menu-movel" aria-label="Abrir menu">
+        <span></span><span></span>
+      </button>
+    </div>
+    <div class="menu-movel" id="menu-movel" hidden>
+      <nav aria-label="Menu móvel">
+        <a href="#experiencias">Experiências</a>
+        <a href="#packs">Packs de aniversário</a>
+        <a href="#entradas">Sem aniversário</a>
+        <a href="#cinema">Cinema Night</a>
+        <a href="#menus">Menus</a>
+        <a href="#fundadoras">Quem somos</a>
+        <a href="#faq">Perguntas frequentes</a>
+      </nav>
+      <a class="btn btn--primario" href="#reservar" data-reservar>Reservar a minha festa</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <svg class="jornada" aria-hidden="true" focusable="false"><path class="jornada__base"/><path class="jornada__linha"/></svg>
+    <div class="jornada__estrela" aria-hidden="true"></div>
+
+    <!-- 1 · HERO -->
+    <section class="hero" id="inicio" aria-labelledby="hero-titulo" data-path="r">
+      <div class="hero__texto">
+        <p class="eyebrow" data-hero>Festas &amp; experiências infantis</p>
+        <h1 id="hero-titulo" class="hero__titulo" data-split>Um universo de diversão à espera de <em>ser descoberto.</em></h1>
+        <p class="hero__sub" data-hero>Na Dreamy Kids, cada criança vive momentos únicos entre brincadeiras, criatividade, desafios e muita diversão.</p>
+        <div class="hero__ctas" data-hero>
+          <a class="btn btn--primario btn--seta" href="#reservar" data-reservar>Quero reservar uma festa <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+          <a class="btn btn--contorno" href="#experiencias">Explorar experiências <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+        </div>
+      </div>
+
+      <div class="hero__cena">
+        <svg class="hero__fitas" data-depth="0.25" viewBox="0 0 1000 620" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="g-fita" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#E4D2FF" stop-opacity="0"/><stop offset=".22" stop-color="#E4D2FF"/>
+              <stop offset=".6" stop-color="#FFD2EA"/><stop offset="1" stop-color="#C9EDFF" stop-opacity=".3"/>
+            </linearGradient>
+          </defs>
+          <path class="fita fita--1" d="M-20 430C120 250 300 170 520 215S860 330 1020 110"/>
+          <path class="fita fita--2" d="M60 540C230 400 430 310 650 340S900 430 1020 300"/>
+          <path class="fita-brilho" d="M-20 430C120 250 300 170 520 215S860 330 1020 110"/>
+        </svg>
+
+        <div class="hero__aura" aria-hidden="true"></div>
+
+        <div class="hero__criancas" data-depth="0.06">
+          <img src="assets/img/hero-criancas.webp" srcset="assets/img/hero-criancas-900.webp 900w, assets/img/hero-criancas.webp 1600w" sizes="(max-width: 900px) 110vw, 66vw"
+               alt="Quatro crianças a divertir-se: uma estica slime, outra celebra de braços no ar, outra tem rodelas de pepino nos olhos e a última joga com um comando e auscultadores" width="1600" height="893" fetchpriority="high">
+          <!-- recortes da própria foto que ganham vida ao passar o rato -->
+          <span class="clone clone--slime" aria-hidden="true"></span>
+          <span class="clone clone--fone fo1" aria-hidden="true"></span><span class="clone clone--fone fo2" aria-hidden="true"></span>
+          <span class="luz-comando" aria-hidden="true"></span>
+        </div>
+        <div class="hero__fx" data-depth="0.06" aria-hidden="true">
+          <span class="hs" data-fx="festa" style="left:28%;top:0;width:24%;height:52%"></span>
+          <span class="hs" data-fx="festa" style="left:15%;top:0;width:11%;height:16%"></span>
+          <span class="hs" data-fx="festa" style="left:54%;top:0;width:11%;height:16%"></span>
+          <span class="hs" data-fx="slime" style="left:4%;top:36%;width:38%;height:48%"></span>
+          <span class="hs" data-fx="fone" style="left:67%;top:12%;width:27%;height:40%"></span>
+          <span class="hs" data-fx="comando" style="left:67%;top:56%;width:30%;height:40%"></span>
+        </div>
+
+        <div class="hero__brilhos" aria-hidden="true">
+          <i class="brilho b1"></i><i class="brilho b2"></i><i class="brilho b3"></i><i class="brilho b4"></i><i class="brilho b5"></i><i class="brilho b6"></i><i class="brilho b7"></i>
+        </div>
+
+        <button class="obj hero__o hero__o--comando" data-obj="comando" data-depth="0.7" aria-label="Comando de videojogos: passa o rato ou toca para acender os botões"></button>
+        <button class="obj hero__o hero__o--pipocas" data-obj="pipocas" data-depth="0.9" aria-label="Pipocas: passa o rato ou toca para as fazer saltar"></button>
+        <button class="obj hero__o hero__o--pipocas2" data-obj="pipocas" data-depth="0.75" aria-label="Pipocas grandes: passa o rato ou toca para as fazer saltar"></button>
+        <button class="obj hero__o hero__o--slime" data-obj="slime" data-depth="0.4" aria-label="Nuvem de slime: passa o rato ou toca para a apertar"></button>
+        <span class="obj obj--deco hero__o hero__o--e1" data-obj="estrela" data-depth="1.1" aria-hidden="true"></span>
+        <span class="obj obj--deco hero__o hero__o--e2" data-obj="estrela" data-depth="0.8" aria-hidden="true"></span>
+        <span class="obj obj--deco hero__o hero__o--e3" data-obj="estrela" data-depth="0.6" aria-hidden="true"></span>
+        <span class="obj obj--deco hero__o hero__o--e4" data-obj="estrela" data-depth="1" aria-hidden="true"></span>
+        <span class="obj obj--deco hero__o hero__o--e5" data-obj="estrela" data-depth="0.5" aria-hidden="true"></span>
+
+        <div class="hero__nuvens" aria-hidden="true">
+          <span class="nv nv1" data-obj="nuvem"></span><span class="nv nv2" data-obj="nuvem"></span>
+          <span class="nv nv3" data-obj="nuvem"></span><span class="nv nv4" data-obj="nuvem"></span>
+        </div>
+      </div>
+
+      <a class="scroll-ind" href="#descobre" aria-label="Continuar a descobrir"><span></span></a>
+      <svg class="hero__onda" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60 C 180 120 340 10 560 50 S 900 120 1080 60 S 1340 20 1440 70 L1440 120 L0 120 Z"/></svg>
+    </section>
+
+    <!-- 2 · INTRODUÇÃO -->
+    <section class="intro" id="descobre" aria-labelledby="intro-titulo" data-path="l">
+      <div class="intro__obj" data-speed="-0.2"><div data-obj="nuvem" aria-hidden="true"></div><button class="obj intro__estrela" data-obj="estrela" aria-label="Estrela: toca para a fazer girar"></button></div>
+      <p class="eyebrow" data-reveal>Descobre a Dreamy Kids</p>
+      <h2 id="intro-titulo" class="intro__titulo" data-reveal>Um espaço onde <span class="t-rosa">infinitas</span> formas de sonhar <span class="t-roxo">ganham vida.</span></h2>
+      <p class="intro__texto" data-reveal>Na Dreamy Kids, cada experiência é pensada para despertar a criatividade, incentivar a descoberta e transformar momentos especiais em memórias inesquecíveis.</p>
+      <p class="intro__mote" data-reveal>Criar. Brincar. Descobrir. Sonhar.</p>
+    </section>
+
+    <!-- 3 · EXPERIÊNCIAS -->
+    <section class="exps" id="experiencias" aria-labelledby="exps-titulo">
+      <header class="sec-cab" data-path="r">
+        <p class="eyebrow" data-reveal>A viagem</p>
+        <h2 id="exps-titulo" data-reveal>Sete estações e cada criança escolhe a sua.</h2>
+        <p data-reveal>Spa e beleza ao lado de gaming, desafios, slime e cinema. Há uma experiência para cada personalidade.</p>
+      </header>
+
+      <article class="est" data-path="l">
+        <figure class="est__media" data-reveal="media">
+          <img src="assets/img/exp-spa.webp" alt="Sala de spa infantil com marquesa rosa, toalha com laço, tabuleiro com pincéis, rodelas de pepino e velas acesas" loading="lazy" width="1200" height="900">
+          <img class="est__media2" src="assets/img/exp-makeup.webp" alt="Pincéis de maquilhagem, blush, esponja e bandolete de spa rosa junto a uma vela" loading="lazy" width="720" height="540">
+          <button class="obj est__obj" data-obj="spa" aria-label="Toalha de spa: toca para a rodar"></button>
+        </figure>
+        <div class="est__texto">
+          <span class="est__num">01</span>
+          <h3 data-reveal>Dreamy Spa <span class="t-leve">&amp; Make-up</span></h3>
+          <p data-reveal>Cuidados de rosto, relaxamento e momentos especiais. No espaço de beleza há maquilhagem, penteados e acessórios para um look ainda mais especial.</p>
+          <p class="est__nota" data-reveal>Não inclui manicure nem pedicure.</p>
+          <div class="est__rodape" data-reveal><span class="chip" data-preco-entrada="spa"></span><a class="link-cta" href="#reservar" data-escolha="entrada:spa">Quero experimentar</a></div>
+        </div>
+      </article>
+
+      <article class="est est--inv" data-path="r">
+        <figure class="est__media" data-reveal="media">
+          <img src="assets/img/exp-slime.webp" alt="Menina a esticar slime em rosa, lilás e azul com purpurinas, numa mesa com frascos de decorações" loading="lazy" width="1200" height="887">
+          <button class="obj est__obj" data-obj="slime" aria-label="Slime: toca para o apertar"></button>
+        </figure>
+        <div class="est__texto">
+          <span class="est__num">02</span>
+          <h3 data-reveal>Slime Experience</h3>
+          <p data-reveal>Cada criança cria e personaliza o seu próprio slime, com cores, brilhos e acessórios. Uma das experiências mais participativas do espaço.</p>
+          <div class="est__rodape" data-reveal><span class="chip" data-preco-entrada="slime"></span><a class="link-cta" href="#reservar" data-escolha="entrada:slime">Quero experimentar</a></div>
+        </div>
+      </article>
+
+      <article class="est est--centro" data-path="c">
+        <figure class="est__media" data-reveal="media">
+          <img src="assets/img/exp-gaming.webp" alt="Sala de jogos acolhedora com ecrã grande, um jogo de aventura, dois comandos na mesa, pipocas e peluches" loading="lazy" width="1200" height="675">
+          <button class="obj est__obj" data-obj="comando" aria-label="Comando: toca para acender os botões e ver a pré-visualização"></button>
+          <div class="previa" role="status" aria-live="polite"></div>
+        </figure>
+        <div class="est__texto">
+          <span class="est__num">03</span>
+          <h3 data-reveal>Gaming Zone</h3>
+          <p data-reveal>Videojogos, consolas e um ambiente moderno. Está incluída em todos os packs de aniversário.</p>
+          <div class="est__rodape" data-reveal><span class="chip" data-preco-entrada="gaming"></span><a class="link-cta" href="#reservar" data-escolha="entrada:gaming">Quero experimentar</a></div>
+        </div>
+      </article>
+
+      <article class="est" data-path="l">
+        <figure class="est__media" data-reveal="media">
+          <img src="assets/img/exp-arena.webp" alt="Bola de futebol e cones sobre relva sintética, com uma criança a jogar junto à baliza, um alvo de pontaria e bolas coloridas" loading="lazy" width="1200" height="900">
+          <button class="obj est__obj est__obj--largo" data-obj="arena" aria-label="Bola e alvo: toca para rematar"></button>
+        </figure>
+        <div class="est__texto">
+          <span class="est__num">04</span>
+          <h3 data-reveal>Arena dos Desafios</h3>
+          <p data-reveal>Futebol, pontaria e minijogos. Aceita os desafios e mostra a tua pontaria. Também incluída em todos os packs.</p>
+          <div class="est__rodape" data-reveal><span class="chip">Incluída nos packs</span><a class="link-cta" href="#packs">Ver packs</a></div>
+        </div>
+      </article>
+
+      <article class="est est--inv" data-path="r">
+        <figure class="est__media" data-reveal="media">
+          <img src="assets/img/exp-art.webp" alt="Escova, óculos de sol, espelho e caixa de jóias decorados com flores, borboletas e pedrinhas, numa mesa com fitas e autocolantes" loading="lazy" width="1200" height="800">
+          <button class="obj est__obj est__obj--largo" data-obj="pincel" aria-label="Pincel: toca para pintar"></button>
+        </figure>
+        <div class="est__texto">
+          <span class="est__num">05</span>
+          <h3 data-reveal>Dreamy Art</h3>
+          <p data-reveal>Escovas, óculos, espelhos, caixas de jóias. A criança decora a sua peça preferida e leva-a para casa.</p>
+          <div class="est__rodape" data-reveal><span class="chip" data-preco-entrada="art"></span><a class="link-cta" href="#reservar" data-escolha="entrada:art">Quero experimentar</a></div>
+        </div>
+      </article>
+
+      <article class="est" data-path="l">
+        <figure class="est__media" data-reveal="media">
+          <img src="assets/img/exp-print.webp" alt="Boné rosa com borboleta bordada, estojo com arco-íris e nuvens e óculos de sol decorados com flores" loading="lazy" width="1200" height="751">
+          <button class="obj est__obj" data-obj="print" aria-label="Boné: toca para estampar"></button>
+        </figure>
+        <div class="est__texto">
+          <span class="est__num">06</span>
+          <h3 data-reveal>Dreamy Print</h3>
+          <p data-reveal>Estampagem personalizada de bolsas, chapéus, óculos e peças únicas. Cada criação é feita pela própria criança.</p>
+          <div class="est__rodape" data-reveal><span class="chip" data-preco-entrada="print"></span><a class="link-cta" href="#reservar" data-escolha="entrada:print">Quero experimentar</a></div>
+        </div>
+      </article>
+
+      <article class="est est--inv" data-path="r">
+        <figure class="est__media" data-reveal="media">
+          <img src="assets/img/exp-cinema.webp" alt="Sala de cinema acolhedora com almofadas, mantas, pipocas, claquete, gomas e sumos em frente a um ecrã com nuvens e estrelas" loading="lazy" width="1200" height="900">
+          <button class="obj est__obj" data-obj="pipocas" aria-label="Pipocas: toca para as fazer saltar"></button>
+        </figure>
+        <div class="est__texto">
+          <span class="est__num">07</span>
+          <h3 data-reveal>Dreamy Cinema</h3>
+          <p data-reveal>Uma zona própria de cinema, com sessões temáticas e programas com refeição.</p>
+          <div class="est__rodape" data-reveal><a class="link-cta" href="#cinema">Conhecer o Cinema Night</a></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- 4 · PAIS -->
+    <section class="pais" id="pais" aria-labelledby="pais-titulo" data-path="l">
+      <div class="pais__cab">
+        <p class="eyebrow" data-reveal>Para os pais</p>
+        <h2 id="pais-titulo" data-reveal>A diversão é deles e <span class="t-roxo">a tranquilidade é tua.</span></h2>
+      </div>
+      <ul class="pais__lista">
+        <li data-reveal><div><h3>Várias experiências, um só espaço</h3><p>Spa, slime, gaming, desafios, arte, personalização e cinema sem mudar de sítio.</p></div></li>
+        <li data-reveal><div><h3>Festas à medida</h3><p>Escolhes o pack, as experiências e o menu. E podes falar connosco para personalizar.</p></div></li>
+        <li data-reveal><div><h3>Atividades em que participam</h3><p>As crianças criam, personalizam e levam para casa o que fizeram.</p></div></li>
+        <li data-reveal><div><h3>O aniversariante em destaque</h3><p>Quem faz anos é sempre o nosso convidado especial, com um momento só seu.</p></div></li>
+        <li data-reveal><div><h3>Para todos os gostos</h3><p>A Dreamy Kids não é só spa ou beleza. Há experiências para diferentes personalidades e interesses.</p></div></li>
+      </ul>
+    </section>
+
+    <!-- 5 · FUNDADORAS -->
+    <section class="fund" id="fundadoras" aria-labelledby="fund-titulo" data-path="r">
+      <figure class="fund__foto" data-reveal="media">
+        <div class="fund__halo" data-speed="0.12" aria-hidden="true"></div>
+        <img src="assets/img/fundadoras.webp" alt="Rita, à esquerda, e Susana, à direita, fundadoras da Dreamy Kids, ambas de blazer branco" loading="lazy" width="1400" height="1029" data-speed="-0.06">
+        <figcaption><span>Rita</span><span>Susana</span></figcaption>
+      </figure>
+      <div class="fund__texto">
+        <p class="eyebrow" data-reveal>Quem somos</p>
+        <h2 id="fund-titulo" data-reveal>Por trás de cada sonho, há duas mulheres com uma missão.</h2>
+        <p data-reveal>A Dreamy Kids nasceu da união de duas experiências complementares: a visão empresarial da <mark class="nome nome--roxo">Susana</mark> e a experiência diária da <mark class="nome nome--rosa">Rita</mark> com o universo infantil.</p>
+        <p data-reveal>A Rita trabalha numa creche e conhece de perto as rotinas, os interesses e a forma como as crianças brincam e aprendem. A Susana trouxe a estrutura, a organização e a visão de negócio.</p>
+        <p data-reveal>Juntas, criaram um lugar onde cada criança pode brincar, explorar, criar e viver momentos únicos.</p>
+        <a class="btn btn--secundario" href="#reservar" data-reservar data-reveal>Falar com a Dreamy Kids</a>
+      </div>
+    </section>
+
+    <!-- 6 · PACKS -->
+    <section class="packs" id="packs" aria-labelledby="packs-titulo">
+      <header class="sec-cab sec-cab--centro" data-path="c">
+        <p class="eyebrow" data-reveal>Packs de aniversário</p>
+        <h2 id="packs-titulo" data-reveal>Escolhe o pack perfeito para uma festa inesquecível.</h2>
+        <p data-reveal>Preços por criança. Todos incluem Gaming Zone, Arena dos Desafios e make-up e penteados.</p>
+      </header>
+      <div class="packs__grelha" id="packs-grelha"></div>
+      <ul class="condicoes" id="condicoes" data-reveal></ul>
+    </section>
+
+    <!-- 8 · ENTRADAS INDIVIDUAIS -->
+    <section class="entradas" id="entradas" aria-labelledby="entradas-titulo" data-path="r">
+      <header class="sec-cab">
+        <p class="eyebrow" data-reveal>Sem aniversário</p>
+        <h2 id="entradas-titulo" data-reveal>Vem viver momentos Dreamy quando quiseres.</h2>
+        <p data-reveal>Entradas individuais, sem precisares de uma festa.</p>
+      </header>
+      <ul class="entradas__lista" id="entradas-lista"></ul>
+    </section>
+
+    <!-- 9 · CINEMA -->
+    <section class="cinema" id="cinema" aria-labelledby="cinema-titulo">
+      <svg class="cinema__borda cinema__borda--topo" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100 L0 50 C 200 0 380 90 620 50 S 1000 0 1200 40 S 1400 70 1440 40 L1440 100 Z"/></svg>
+      <div class="cinema__ceu" aria-hidden="true"></div>
+      <div class="cinema__in">
+        <div class="cinema__cab">
+          <p class="eyebrow eyebrow--claro" data-reveal>Dreamy Cinema Night</p>
+          <h2 id="cinema-titulo" data-reveal>Filmes, pipocas e muita diversão.</h2>
+          <p data-reveal>Uma noite de cinema pensada para eles, com jantar incluído e Gaming Zone.</p>
+          <button class="obj cinema__pipocas" data-obj="pipocas" aria-label="Pipocas: toca para as fazer saltar"></button>
+        </div>
+        <figure class="cinema__foto" data-reveal="media">
+          <img src="assets/img/cinema-sala.webp" alt="Imagem ilustrativa de crianças em pufes e almofadas a ver um filme projetado, com pipocas, tenda e luzes de estrelas" loading="lazy" width="1400" height="1050">
+          <figcaption>Imagem ilustrativa</figcaption>
+        </figure>
+        <div class="cinema__planos" id="cinema-planos"></div>
+        <div class="cinema__horario" data-reveal>
+          <h3>Horário</h3>
+          <ul id="cinema-horario"></ul>
+        </div>
+      </div>
+      <svg class="cinema__borda cinema__borda--base" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 L1440 0 L1440 50 C 1240 100 1060 10 820 50 S 440 100 240 60 S 40 30 0 60 Z"/></svg>
+    </section>
+
+    <!-- 10 · MENUS -->
+    <section class="menus" id="menus" aria-labelledby="menus-titulo" data-path="l">
+      <header class="sec-cab">
+        <p class="eyebrow" data-reveal>Menus de comida</p>
+        <h2 id="menus-titulo" data-reveal>Deliciosas opções para momentos ainda mais especiais.</h2>
+        <p data-reveal>Preços por criança. Qualquer menu pode ser adicionado a qualquer pack.</p>
+      </header>
+      <div class="menus__grelha" id="menus-grelha"></div>
+    </section>
+
+    <!-- 12 · RESERVAR -->
+    <section class="reservar" id="reservar" aria-labelledby="reservar-titulo" data-path="l">
+      <div class="reservar__passos">
+        <p class="eyebrow" data-reveal>Como reservar</p>
+        <h2 id="reservar-titulo" data-reveal>Quatro passos até ao grande dia.</h2>
+        <ol class="passos">
+          <li data-reveal><span>1</span><div><h3>Escolhe</h3><p>O pack ou a experiência que mais combina com a criança.</p></div></li>
+          <li data-reveal><span>2</span><div><h3>Fala connosco</h3><p>Envia-nos o teu pedido com a data e o número de crianças.</p></div></li>
+          <li data-reveal><span>3</span><div><h3>Confirmamos</h3><p>A equipa confirma contigo os detalhes e a disponibilidade.</p></div></li>
+          <li data-reveal><span>4</span><div><h3>Prepara-te</h3><p>Para viver um momento muito especial.</p></div></li>
+        </ol>
+      </div>
+
+      <form class="pedido" id="pedido" data-reveal novalidate>
+        <span class="pedido__deco pedido__deco--estrela" data-obj="estrela" aria-hidden="true"></span>
+        <p class="pedido__selo">Fala connosco</p>
+        <h3>Pedir informações sobre a minha festa</h3>
+        <p class="pedido__intro">Preenche o que souberes. Este formulário prepara a tua mensagem; a reserva só fica confirmada depois de falares com a equipa.</p>
+        <label>O que procuras
+          <select name="escolha" id="pedido-escolha"></select>
+        </label>
+        <div class="pedido__linha">
+          <label>Número de crianças
+            <input type="number" name="criancas" min="1" max="60" inputmode="numeric" placeholder="Ex.: 12">
+          </label>
+          <label>Data pretendida
+            <input type="date" name="data">
+          </label>
+        </div>
+        <label>O teu nome
+          <input type="text" name="nome" autocomplete="name" placeholder="Opcional">
+        </label>
+        <label>Mais alguma coisa?
+          <textarea name="nota" rows="2" placeholder="Idade da criança, tema preferido, menus..."></textarea>
+        </label>
+        <div class="pedido__previa">
+          <span>A tua mensagem</span>
+          <p id="pedido-previa"></p>
+        </div>
+        <div class="pedido__acoes">
+          <a class="btn btn--primario" id="pedido-enviar" href="#" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+          <button class="btn btn--texto" type="button" id="pedido-copiar">Copiar mensagem</button>
+        </div>
+        <p class="pedido__estado" id="pedido-estado" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- 13 · FAQ -->
+    <section class="faq" id="faq" aria-labelledby="faq-titulo" data-path="r">
+      <header class="sec-cab">
+        <p class="eyebrow" data-reveal>Perguntas frequentes</p>
+        <h2 id="faq-titulo" data-reveal>Tudo o que precisas de saber.</h2>
+        <p data-reveal>Escolhe uma carta e vira-a para descobrir a resposta.</p>
+      </header>
+      <div class="faq__grelha" id="faq-lista"></div>
+    </section>
+
+    <!-- 14 · CTA FINAL -->
+    <section class="final" id="final" aria-labelledby="final-titulo" data-path="c">
+      <div class="final__ceu" aria-hidden="true">
+        <div class="final__o final__o--n1" data-obj="nuvem" data-speed="-0.15"></div>
+        <div class="final__o final__o--n2" data-obj="nuvem" data-speed="0.1"></div>
+        <div class="final__o final__o--e1" data-obj="estrela" data-speed="-0.3"></div>
+        <div class="final__o final__o--e2" data-obj="estrela" data-speed="0.2"></div>
+        <div class="final__o final__o--e3" data-obj="estrela" data-speed="-0.1"></div>
+      </div>
+      <img class="final__logo" src="assets/img/logo.webp" alt="" width="800" height="482" loading="lazy" data-reveal>
+      <h2 id="final-titulo" data-reveal>O próximo sonho inesquecível pode começar aqui.</h2>
+      <p data-reveal>Descobre tudo o que podemos preparar para tornar o próximo momento especial ainda mais mágico.</p>
+      <a class="btn btn--primario btn--lg" href="#reservar" data-reservar data-reveal>Vamos criar uma festa inesquecível</a>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape__in">
+      <div class="rodape__esq">
+        <p class="rodape__nota">© <span id="ano">2026</span> Dreamy Kids. Imagens das experiências meramente ilustrativas.</p>
+        <ul class="rodape__contactos" id="rodape-contactos"></ul>
+      </div>
+      <p class="rodape__credito">Design e desenvolvimento: <a href="https://www.instagram.com/ogrupocado/" target="_blank" rel="noopener">Grupo Cado</a></p>
+    </div>
+  </footer>
+
+  <a class="flutuante" id="flutuante" href="#reservar" data-reservar aria-label="Reservar uma festa">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>
+    <span>Reservar</span>
+  </a>
+
+  <div class="revisao" id="revisao" hidden></div>
+  <canvas class="rasto" id="rasto" aria-hidden="true"></canvas>
+
+  <script src="assets/js/data.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script src="assets/js/objetos.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/hero-fx.js" defer></script>
+</body>
+</html>
