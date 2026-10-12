@@ -132,7 +132,7 @@
         var agora = Date.now(); if (agora - ultimo < 1100) return; ultimo = agora;
         EFEITOS[tipo] && EFEITOS[tipo]();
       };
-      if (temRato) z.addEventListener("pointerenter", disparar);
+      if (temRato) z.addEventListener("pointerenter", function () { if (!document.documentElement.classList.contains("a-rolar")) disparar(); });
       z.addEventListener("click", disparar);
     });
   }

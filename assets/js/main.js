@@ -251,7 +251,12 @@
   function ligarTopo() {
     var topo = $("#topo"), bt = $(".topo__menu"), menu = $("#menu-movel");
     var fl = $("#flutuante"), rodape = $(".rodape");
+    // enquanto rola: loops pausados e cena da hero sem hover (nada de efeitos nem hit-tests a meio do scroll)
+    var raiz = document.documentElement, tRolar = 0;
     var onScroll = function () {
+      if (!tRolar) raiz.classList.add("a-rolar");
+      clearTimeout(tRolar);
+      tRolar = setTimeout(function () { raiz.classList.remove("a-rolar"); tRolar = 0; }, 200);
       topo.classList.toggle("topo--rolou", window.scrollY > 24);
       fl.classList.toggle("on", window.scrollY > window.innerHeight * 0.7);
       // no rodapé o botão flutuante sai, para não tapar os contactos nem o crédito
@@ -297,7 +302,7 @@
       b.addEventListener("click", function () { window.DKObjetos.animar(b); });
       if (temRato) {
         // a estrela reage ao hover só em CSS (rodar, crescer, brilhar); a volta completa fica para o toque
-        if (tipo !== "estrela") b.addEventListener("mouseenter", function () { window.DKObjetos.animar(b); });
+        if (tipo !== "estrela") b.addEventListener("mouseenter", function () { if (!document.documentElement.classList.contains("a-rolar")) window.DKObjetos.animar(b); });
         if (tipo === "comando") ligarComando(b);
         b.addEventListener("pointermove", function (e) {
           var r = b.getBoundingClientRect();
@@ -341,25 +346,8 @@
     partir(el);
   }
 
-  /* Scroll suave com inércia leve (Lenis), só em computador com rato e sem movimento reduzido.
-     As âncoras do menu passam a deslizar pelo Lenis, com espaço para o cabeçalho. */
-  var lenis = null;
-  function suave(ST) {
-    if (!window.Lenis || !temRato || reduz) return;
-    lenis = new window.Lenis({ lerp: 0.11, wheelMultiplier: 1, smoothWheel: true });
-    document.documentElement.classList.add("lenis-on");
-    lenis.on("scroll", ST.update);
-    window.gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
-    window.gsap.ticker.lagSmoothing(0);
-    document.addEventListener("click", function (e) {
-      var a = e.target.closest('a[href^="#"]'); if (!a) return;
-      var id = a.getAttribute("href"); if (id.length < 2) return;
-      var alvo = document.querySelector(id); if (!alvo) return;
-      e.preventDefault();
-      lenis.scrollTo(alvo, { offset: -90, duration: 1.2 });
-      history.replaceState(null, "", id);
-    });
-  }
+  /* Sem Lenis: o scroll nativo corre fora do thread principal e não trava quando a página está ocupada.
+     As âncoras deslizam com scroll-behavior: smooth (CSS), com scroll-padding-top para o cabeçalho. */
 
   /* Animações em loop (estrelas, nuvens, brilhos) param quando a sua zona sai do ecrã */
   function pausarForaDoEcra() {
@@ -440,7 +428,6 @@
 
     window.addEventListener("load", function () { ST.refresh(); });
     document.documentElement.classList.remove("pre");
-    suave(ST);
   }
 
   /* Linha contínua que liga os momentos da página e se desenha com o scroll */
