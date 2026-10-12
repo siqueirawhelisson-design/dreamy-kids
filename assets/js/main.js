@@ -262,7 +262,9 @@
       // no rodapé o botão flutuante sai, para não tapar os contactos nem o crédito
       fl.classList.toggle("no-fim", rodape.getBoundingClientRect().top < window.innerHeight - 40);
     };
-    window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    // primeira leitura só no primeiro frame: lê a posição do rodapé, o que obrigava a medir a página inteira a meio do arranque
+    requestAnimationFrame(onScroll);
     function fechar() { bt.setAttribute("aria-expanded", "false"); bt.setAttribute("aria-label", "Abrir menu"); menu.hidden = true; document.body.classList.remove("sem-scroll"); }
     bt.addEventListener("click", function () {
       var aberto = bt.getAttribute("aria-expanded") === "true";
@@ -358,18 +360,41 @@
     $$(".hero, .intro, .est, .pedido, .cinema, .final, .packs").forEach(function (s) { io.observe(s); });
   }
 
-  function animar() {
-    var gsap = window.gsap, ST = window.ScrollTrigger;
-    var raiz = document.documentElement;
-    if (!gsap || !ST || reduz) { raiz.classList.add("sem-anim", "loops-on"); raiz.classList.remove("pre"); return; }
-    gsap.registerPlugin(ST);
-    raiz.classList.add("anim");
+  /* Revelações ao rolar: IntersectionObserver + transição CSS (classes .rv / .rv-in).
+     Antes eram ~100 ScrollTriggers, cada um a medir a página no arranque; isto não mede nada
+     e a transição (opacity, translate, scale) corre na GPU. */
+  function revelar() {
+    var alvos = $$("[data-reveal]").filter(function (el) { return !el.closest(".hero"); });
+    if (!("IntersectionObserver" in window)) return;
+    alvos.forEach(function (el) { el.classList.add(el.getAttribute("data-reveal") === "media" ? "rv-media" : "rv"); });
+    var io = new IntersectionObserver(function (es) {
+      var k = 0;
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target; io.unobserve(el);
+        el.style.transitionDelay = Math.min(k++, 5) * 80 + "ms"; // cascata no que entra junto
+        el.classList.add("rv-in");
+        // no fim limpa tudo, para devolver transform/transition ao CSS normal (tilt, hover dos cartões)
+        setTimeout(function () { el.classList.remove("rv", "rv-media", "rv-in"); el.style.transitionDelay = ""; }, 1400);
+      });
+    }, { rootMargin: "0px 0px -10% 0px" });
+    alvos.forEach(function (el) { io.observe(el); });
+  }
 
-    // Hero: entrada. Os loops CSS (flutuar, brilhos) só arrancam no fim: se começarem com a hero
-    // ainda invisível, o Chrome não os passa à GPU e ficam a ocupar o processador durante muito tempo.
-    var h1 = $("[data-split]"); partirTitulo(h1);
-    // no fim da entrada: o título fica "livre" (letras podem saltar) e os loops arrancam (só no computador, ver CSS)
+  var comRevelar = false;
+  function animar() {
+    var gsap = window.gsap, raiz = document.documentElement, h1 = $("[data-split]");
     var ligarLoops = function () { h1.classList.add("livre"); raiz.classList.add("loops-on"); };
+    if (!gsap || reduz) { raiz.classList.add("sem-anim"); raiz.classList.remove("pre"); ligarLoops(); return; }
+    raiz.classList.add("anim");
+    partirTitulo(h1); // as letras do título reagem ao toque/rato (hero-fx.js) em qualquer ecrã
+    comRevelar = true; // as revelações ligam-se no fim do arranque, depois de as secções estarem montadas
+
+    // Telemóvel/tablet: sem entrada animada; a hero aparece logo e o processador fica livre para o scroll
+    var computador = window.matchMedia("(min-width: 900px)").matches && temRato;
+    if (!computador) { raiz.classList.remove("pre"); ligarLoops(); return; }
+
+    // Computador: entrada da hero. Os loops CSS só arrancam no fim (ver CSS .loops-on).
     var tl = gsap.timeline({ defaults: { ease: "power3.out" }, onComplete: ligarLoops });
     tl.from(".topo__in > *", { opacity: 0, duration: 0.6, stagger: 0.06 })
       .from(".hero .eyebrow", { y: 14, opacity: 0, duration: 0.5 }, 0.15)
@@ -380,58 +405,39 @@
       .from(".fita", { strokeDasharray: "0 1600", duration: 1.8, ease: "power2.inOut", stagger: 0.2 }, 0.3)
       .from(".hero__cena > .obj, .hero__nuvens .nv", { scale: 0, opacity: 0, duration: 0.75, stagger: 0.05, ease: "back.out(1.7)", clearProps: "transform,opacity" }, 0.45)
       .from(".scroll-ind", { opacity: 0, duration: 0.6 }, 1.2);
+    raiz.classList.remove("pre");
 
-    // Revelações de texto e cartões: em lote, para que o que entra junto entre em cascata.
-    // clearProps no fim devolve o transform ao CSS (senão o tilt e a elevação dos cartões ficam bloqueados).
-    var textos = $$("[data-reveal]").filter(function (el) { return !el.closest(".hero") && el.getAttribute("data-reveal") !== "media"; });
-    gsap.set(textos, { y: 26, opacity: 0 });
-    ST.batch(textos, {
-      start: "top 88%", once: true, interval: 0.08, batchMax: 6,
-      onEnter: function (lote) {
-        gsap.to(lote, { y: 0, opacity: 1, duration: 0.75, ease: "power3.out", stagger: 0.08, overwrite: true, clearProps: "transform,opacity" });
-      }
+    // ScrollTrigger só faz falta no computador (parallax e linha da jornada): carrega-se à parte, depois da entrada
+    var st = document.createElement("script");
+    st.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js";
+    st.onload = function () { extrasComputador(gsap, window.ScrollTrigger); };
+    document.body.appendChild(st);
+  }
+
+  function extrasComputador(gsap, ST) {
+    if (!ST) return;
+    gsap.registerPlugin(ST);
+    // Parallax subtil
+    $$("[data-speed]").forEach(function (el) {
+      var v = parseFloat(el.getAttribute("data-speed"));
+      gsap.fromTo(el, { y: -v * 200 }, { y: v * 200, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true } });
     });
-
-    // Fotografias: abrem-se de dentro para fora; o objeto interativo chega logo a seguir
-    $$('[data-reveal="media"]').forEach(function (el) {
-      var imgs = $$("img", el), objs = $$(".obj", el);
-      var tlm = gsap.timeline({ scrollTrigger: { trigger: el, start: "top 86%", once: true } });
-      tlm.from(imgs, { clipPath: "inset(16% 12% 16% 12% round 48px)", scale: 1.1, duration: 1.05, ease: "expo.out", stagger: 0.1, clearProps: "clipPath,transform" });
-      if (objs.length) tlm.from(objs, { scale: 0.5, opacity: 0, rotation: -10, duration: 0.7, ease: "back.out(1.8)", clearProps: "transform,opacity" }, 0.3);
+    // Rato no hero: quickTo reutiliza uma única animação por camada
+    var hero = $(".hero"), camadas = $$(".hero__cena [data-depth]").map(function (c) {
+      return { d: +c.getAttribute("data-depth"), x: gsap.quickTo(c, "x", { duration: 0.9, ease: "power2.out" }), y: gsap.quickTo(c, "y", { duration: 0.9, ease: "power2.out" }) };
     });
-
-    var mm = gsap.matchMedia();
-    mm.add("(min-width: 900px)", function () {
-      // Parallax subtil
-      $$("[data-speed]").forEach(function (el) {
-        var v = parseFloat(el.getAttribute("data-speed"));
-        gsap.fromTo(el, { y: -v * 200 }, { y: v * 200, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true } });
+    var pedido = false, ex = 0, ey = 0;
+    hero.addEventListener("pointermove", function (e) {
+      ex = e.clientX; ey = e.clientY;
+      if (pedido) return; pedido = true;
+      requestAnimationFrame(function () {
+        pedido = false;
+        var x = ex / window.innerWidth - 0.5, y = ey / window.innerHeight - 0.5;
+        camadas.forEach(function (c) { c.x(x * c.d * 50); c.y(y * c.d * 40); });
       });
-      // Rato no hero
-      // quickTo reutiliza uma única animação por camada, em vez de criar dezenas de tweens por segundo
-      var hero = $(".hero"), camadas = $$(".hero__cena [data-depth]").map(function (c) {
-        return { d: +c.getAttribute("data-depth"), x: gsap.quickTo(c, "x", { duration: 0.9, ease: "power2.out" }), y: gsap.quickTo(c, "y", { duration: 0.9, ease: "power2.out" }) };
-      });
-      var pedido = false, ex = 0, ey = 0;
-      var mover = function (e) {
-        ex = e.clientX; ey = e.clientY;
-        if (pedido) return; pedido = true;
-        requestAnimationFrame(function () {
-          pedido = false;
-          var x = ex / window.innerWidth - 0.5, y = ey / window.innerHeight - 0.5;
-          camadas.forEach(function (c) { c.x(x * c.d * 50); c.y(y * c.d * 40); });
-        });
-      };
-      if (temRato) hero.addEventListener("pointermove", mover);
-      // Linha da jornada
-      var parar = jornada();
-      return function () { if (temRato) hero.removeEventListener("pointermove", mover); parar(); };
     });
-
-    // (o céu estrelado do cinema fica estático: animá-lo com o scroll repintava a secção inteira a cada frame)
-
-    window.addEventListener("load", function () { ST.refresh(); });
-    document.documentElement.classList.remove("pre");
+    jornada();
+    if (document.readyState === "complete") ST.refresh(); else window.addEventListener("load", function () { ST.refresh(); });
   }
 
   /* Linha contínua que liga os momentos da página e se desenha com o scroll */
@@ -477,9 +483,18 @@
     return function () { trig.kill(); svg.classList.remove("on"); estrela.classList.remove("on"); };
   }
 
+  /* Arranque em blocos: primeiro o que se vê (topo e hero), depois o resto da página em pedaços pequenos,
+     com pausas entre eles para o telemóvel poder responder ao toque e ao scroll. */
   function iniciar() {
-    renderPacks(); renderEntradas(); renderCinema(); renderMenus(); if ($("#galeria-grelha")) renderGaleria();
-    renderPedido(); renderFAQ(); renderGeral(); ligarTopo(); ligarObjetos(); pausarForaDoEcra(); animar();
+    renderGeral(); ligarTopo(); window.DKObjetos.montar($(".hero")); animar();
+    var passos = [
+      function () { renderPacks(); renderEntradas(); },
+      function () { renderCinema(); renderMenus(); if ($("#galeria-grelha")) renderGaleria(); },
+      function () { renderPedido(); renderFAQ(); },
+      ligarObjetos,
+      function () { pausarForaDoEcra(); if (comRevelar) revelar(); }
+    ];
+    (function proximo() { var f = passos.shift(); if (!f) return; f(); setTimeout(proximo, 0); })();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else iniciar();
 })();
