@@ -411,7 +411,12 @@
     var st = document.createElement("script");
     st.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js";
     st.onload = function () { extrasComputador(gsap, window.ScrollTrigger); };
-    document.body.appendChild(st);
+    // só quando o browser estiver livre (o refresh mede a página toda e chocava com o fim da entrada da hero)
+    var carregar = function () { document.body.appendChild(st); };
+    tl.eventCallback("onComplete", function () {
+      ligarLoops();
+      if ("requestIdleCallback" in window) requestIdleCallback(carregar, { timeout: 4000 }); else setTimeout(carregar, 1500);
+    });
   }
 
   function extrasComputador(gsap, ST) {

@@ -1,6 +1,6 @@
 /* Dreamy Kids · efeitos divertidos da hero
    - letras do título que saltam ao passar o rato
-   - zonas da fotografia que reagem (slime, confettis, pepinos, música, comando)
+   - confettis a sair dos punhos do menino na fotografia
    - rasto de estrelinhas a seguir o cursor
    Tudo desligado com prefers-reduced-motion. Em ecrãs táteis, as zonas reagem ao toque. */
 (function () {
@@ -64,64 +64,10 @@
         .to(p, { y: "+=" + rnd(90, 160), x: "+=" + rnd(-20, 20), rotation: "+=" + rnd(-200, 200), opacity: 0, duration: rnd(0.8, 1.2), ease: "power1.in" });
     }
   }
-  function brilhos(pontos, cor) {
-    pontos.forEach(function (pt, i) {
-      var p = particula("fx--brilho", pt[0], pt[1]);
-      p.style.background = cor || CORES[i % CORES.length];
-      gsap.timeline({ delay: i * 0.05, onComplete: p.remove.bind(p) })
-        .fromTo(p, { scale: 0, rotation: 0 }, { scale: rnd(0.8, 1.4), rotation: 90, duration: 0.3, ease: "back.out(2)" })
-        .to(p, { scale: 0, opacity: 0, y: -12, duration: 0.5 });
-    });
-  }
-  function notas(x, y) {
-    ["♪", "♫", "♪"].forEach(function (n, i) {
-      var p = particula("fx--nota", x, y, n);
-      p.style.color = CORES[(i + 1) % CORES.length];
-      gsap.timeline({ delay: i * 0.18, onComplete: p.remove.bind(p) })
-        .fromTo(p, { y: 0, x: 0, opacity: 0, scale: 0.6 }, { y: -30, x: rnd(-14, 14), opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" })
-        .to(p, { y: -90, x: "+=" + rnd(-24, 24), rotation: rnd(-25, 25), opacity: 0, duration: 1.1, ease: "sine.in" });
-    });
-  }
-  function pulso(alvos, vezes, escala) {
-    gsap.timeline().to(alvos, { scale: escala || 1.07, duration: 0.14, ease: "power2.out", yoyo: true, repeat: vezes * 2 - 1, clearProps: "transform" });
-  }
-
+  // Na foto só fica a festa (confettis nos punhos do menino). Slime, fone e comando saíram:
+  // o slime aplicava um filtro de distorção sobre a fotografia e era o efeito mais pesado do site.
   var EFEITOS = {
-    festa: function () { // confettis a sair dos dois punhos
-      confettis(21, 4, 16); confettis(60, 4, 16);
-    },
-    slime: function () { // a gosma ondula e regressa com elasticidade
-      var mapa = $("#gosma-mapa"), ruido = $("#gosma-ruido"), clone = $(".clone--slime");
-      gsap.killTweensOf([mapa, ruido]);
-      clone.classList.add("ativo");
-      gsap.timeline({ onComplete: function () { clone.classList.remove("ativo"); } })
-        .to(mapa, { attr: { scale: 22 }, duration: 0.3, ease: "power2.out" })
-        .to(ruido, { attr: { baseFrequency: "0.02 0.05" }, duration: 0.9, ease: "sine.inOut" }, 0)
-        .to(mapa, { attr: { scale: 0 }, duration: 1.4, ease: "elastic.out(1, 0.3)" })
-        .to(ruido, { attr: { baseFrequency: "0.012 0.03" }, duration: 1.2 }, "<");
-      brilhos([[14, 50], [22, 61], [30, 68], [38, 70], [26, 72]], "#FFFFFF");
-    },
-    pepino: function () { // os pepinos giram, saltam e soltam gotinhas
-      $$(".clone--pepino").forEach(function (c, i) {
-        gsap.timeline({ delay: i * 0.08 })
-          .to(c, { rotation: i ? -220 : 220, scale: 1.45, y: -16, duration: 0.45, ease: "back.out(1.8)" })
-          .to(c, { rotation: i ? -250 : 250, duration: 0.25, ease: "sine.inOut" })
-          .to(c, { rotation: i ? -360 : 360, scale: 1, y: 0, duration: 0.7, ease: "bounce.out", clearProps: "transform" });
-      });
-      brilhos([[52, 44], [57.5, 41], [63, 45], [55, 56], [61, 57]], "#A6E3A1");
-    },
-    fone: function () { // os auscultadores pulsam ao ritmo e saem notas
-      var fones = $$(".clone--fone");
-      fones.forEach(function (c) { c.classList.add("ativo"); });
-      setTimeout(function () { fones.forEach(function (c) { c.classList.remove("ativo"); }); }, 950);
-      pulso(fones, 3, 1.1);
-      notas(73, 30); setTimeout(function () { notas(88, 29); }, 220);
-    },
-    comando: function () { // brilho leve à volta das mãos e faíscas suaves, sem mexer a fotografia
-      gsap.timeline().fromTo(".luz-comando", { opacity: 0, scale: 0.85 }, { opacity: 0.9, scale: 1.05, duration: 0.35, ease: "power2.out" })
-        .to(".luz-comando", { opacity: 0, scale: 1.15, duration: 0.9, ease: "power1.in" });
-      brilhos([[76, 68], [86, 66], [90, 74], [80, 63]]);
-    }
+    festa: function () { confettis(21, 4, 16); confettis(60, 4, 16); }
   };
 
   function zonas() {
