@@ -27,7 +27,7 @@
         w.appendChild(s);
       });
     });
-    setTimeout(function () { h1.classList.add("livre"); }, 2300); // depois da entrada, as letras podem saltar sem ser cortadas
+    // a classe "livre" (letras podem saltar sem ser cortadas) é posta pelo main.js no fim da entrada da hero
     var saltar = function (l) {
       if (l._ativa) return; l._ativa = true;
       var noRoxo = !!l.closest("em");

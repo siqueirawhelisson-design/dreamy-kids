@@ -360,13 +360,17 @@
 
   function animar() {
     var gsap = window.gsap, ST = window.ScrollTrigger;
-    if (!gsap || !ST || reduz) { document.documentElement.classList.add("sem-anim"); document.documentElement.classList.remove("pre"); return; }
+    var raiz = document.documentElement;
+    if (!gsap || !ST || reduz) { raiz.classList.add("sem-anim", "loops-on"); raiz.classList.remove("pre"); return; }
     gsap.registerPlugin(ST);
-    document.documentElement.classList.add("anim");
+    raiz.classList.add("anim");
 
-    // Hero: entrada
+    // Hero: entrada. Os loops CSS (flutuar, brilhos) só arrancam no fim: se começarem com a hero
+    // ainda invisível, o Chrome não os passa à GPU e ficam a ocupar o processador durante muito tempo.
     var h1 = $("[data-split]"); partirTitulo(h1);
-    var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    // no fim da entrada: o título fica "livre" (letras podem saltar) e os loops arrancam (só no computador, ver CSS)
+    var ligarLoops = function () { h1.classList.add("livre"); raiz.classList.add("loops-on"); };
+    var tl = gsap.timeline({ defaults: { ease: "power3.out" }, onComplete: ligarLoops });
     tl.from(".topo__in > *", { opacity: 0, duration: 0.6, stagger: 0.06 })
       .from(".hero .eyebrow", { y: 14, opacity: 0, duration: 0.5 }, 0.15)
       .from(".w__i", { yPercent: 110, duration: 0.85, stagger: 0.04 }, 0.15)

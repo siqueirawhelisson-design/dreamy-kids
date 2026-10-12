@@ -222,8 +222,7 @@ main > section { position: relative; z-index: 1; max-width: var(--max); margin: 
 .fita { fill: none; stroke: url(#g-fita); stroke-linecap: round; }
 .fita--1 { stroke-width: 44; opacity: .55; }
 .fita--2 { stroke-width: 20; opacity: .5; }
-.fita-brilho { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; opacity: .9; stroke-dasharray: 80 1400; animation: fita 7s linear 2; } /* duas passagens e para: em loop repintava a cena inteira */
-@keyframes fita { to { stroke-dashoffset: -1480; } }
+/* (o brilho que corria pela fita saiu: stroke-dashoffset não vai para a GPU e arrastava todas as animações da hero para o processador) */
 
 .hero__criancas, .hero__fx { position: absolute; left: -3%; width: 106%; bottom: 8%; aspect-ratio: 1600 / 893; }
 .hero__criancas { display: block; } /* imagem já com fundo transparente: sem mix-blend-mode, que obrigava a repintar a cena a cada frame */
@@ -275,22 +274,22 @@ main > section { position: relative; z-index: 1; max-width: var(--max); margin: 
 
 .hero__o { position: absolute; z-index: 2; }
 .hero__cena > .obj[data-depth] { will-change: transform; } /* parallax no compositor */
-.hero__o > svg { animation: flutua 6s ease-in-out infinite; }
+.hero__o { animation: flutua 6s ease-in-out infinite; }
 .hero__o--comando { top: 3%; right: 13%; width: 15%; }
-.hero__o--comando > svg { animation-name: flutua2; animation-duration: 7s; }
+.hero__o--comando { animation-name: flutua2; animation-duration: 7s; }
 .hero__o--pipocas { top: 25%; right: 3%; width: 8.5%; }
 .hero__o--pipocas2 { top: 8%; left: 41%; width: 11%; }
-.hero__o--pipocas2 > svg { animation-delay: -1s; animation-duration: 6.5s; }
-.hero__o--pipocas > svg { animation-delay: -3s; animation-duration: 5.5s; }
+.hero__o--pipocas2 { animation-delay: -1s; animation-duration: 6.5s; }
+.hero__o--pipocas { animation-delay: -3s; animation-duration: 5.5s; }
 .hero__o--slime { bottom: 3%; left: 21%; width: 15%; }
-.hero__o--slime > svg { animation-delay: -1.5s; animation-duration: 7.5s; }
+.hero__o--slime { animation-delay: -1.5s; animation-duration: 7.5s; }
 .hero__o--e1 { top: 0; right: 3%; width: 7.5%; }
 .hero__o--e2 { top: 11%; left: 31%; width: 5%; }
 .hero__o--e3 { top: 27%; left: 63%; width: 3.6%; }
 .hero__o--e4 { bottom: 31%; right: 1.5%; width: 4.5%; }
 .hero__o--e5 { bottom: 10%; left: 45%; width: 5%; }
-.hero__o--e1 > svg, .hero__o--e3 > svg { animation-name: flutua2; animation-delay: -2s; }
-.hero__o--e4 > svg { animation-delay: -4s; }
+.hero__o--e1, .hero__o--e3 { animation-name: flutua2; animation-delay: -2s; }
+.hero__o--e4 { animation-delay: -4s; }
 
 .hero__nuvens { position: absolute; left: -12%; right: -4%; bottom: -2%; height: 30%; z-index: 1; pointer-events: none; }
 .nv { position: absolute; bottom: 0; }
@@ -298,11 +297,11 @@ main > section { position: relative; z-index: 1; max-width: var(--max); margin: 
 .nv:hover > svg { scale: 1.04; }
 .nv1 { left: 0; width: 30%; bottom: -4%; }
 .nv2 { left: 22%; width: 34%; bottom: -16%; }
-.nv2 > svg { animation-delay: -3s; }
+.nv2 { animation-delay: -3s; }
 .nv3 { left: 50%; width: 30%; bottom: -6%; }
-.nv3 > svg { animation-delay: -6s; }
+.nv3 { animation-delay: -6s; }
 .nv4 { right: -2%; width: 34%; bottom: -14%; }
-.nv4 > svg { animation-delay: -1.5s; }
+.nv4 { animation-delay: -1.5s; }
 
 /* Estrelas: hover suave em CSS */
 .obj[data-obj="estrela"] > svg { transition: transform .35s var(--ease), scale .5s var(--ease), rotate .6s var(--ease), filter .4s; }
@@ -325,9 +324,9 @@ main > section { position: relative; z-index: 1; max-width: var(--max); margin: 
 .intro > *:not(.intro__obj) { grid-column: 2; }
 .intro__obj { grid-column: 1; grid-row: 1 / span 4; position: relative; align-self: center; }
 .intro__obj > div { width: 100%; max-width: 280px; }
-.intro__obj > div > svg { animation: flutua 8s ease-in-out infinite; }
+.intro__obj > div { animation: flutua 8s ease-in-out infinite; }
 .intro__estrela { position: absolute; width: 26%; right: 6%; top: -18%; }
-.intro__estrela > svg { animation: flutua2 6s ease-in-out infinite; }
+.intro__estrela { animation: flutua2 6s ease-in-out infinite; }
 .intro__titulo { font-size: clamp(2.4rem, 5.6vw, 4.8rem); margin-bottom: .5em; }
 .intro__texto { font-size: clamp(1.15rem, 1.7vw, 1.4rem); color: var(--tinta-2); max-width: 40ch; }
 .intro__mote { font-family: var(--f-titulo); font-size: 1.3rem; color: var(--roxo); margin-top: .6em; }
@@ -511,7 +510,7 @@ main > section.cinema { max-width: none; padding-inline: 0; margin-block: clamp(
 .cinema__cab h2 { color: #fff; margin-bottom: .4em; }
 .cinema__cab p:not(.eyebrow) { color: #CFC8EA; font-size: 1.1rem; max-width: 36ch; }
 .cinema__pipocas { width: 110px; margin-top: 20px; }
-.cinema__pipocas > svg { animation: flutua 5s ease-in-out infinite; }
+.cinema__pipocas { animation: flutua 5s ease-in-out infinite; }
 .cinema__foto { position: relative; margin: 0; }
 .cinema__foto img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 28px 140px 28px 28px; box-shadow: 0 26px 40px -28px rgba(0, 0, 0, .6); }
 .cinema__foto figcaption { position: absolute; left: 16px; top: 16px; padding: 4px 10px; border-radius: 999px; background: rgba(28, 23, 56, .75); font-size: .75rem; font-weight: 600; color: #E7E2F7; }
@@ -640,10 +639,10 @@ main > section.cinema { max-width: none; padding-inline: 0; margin-block: clamp(
 .pedido .pedido__estado { color: #FFD3EA; }
 .pedido :focus-visible { outline-color: #FFE59A; }
 .pedido__deco { position: absolute; pointer-events: none; }
-.pedido__deco > svg { animation: flutua 7s ease-in-out infinite; }
+.pedido__deco { animation: flutua 7s ease-in-out infinite; }
 .pedido__deco--nuvem { width: 150px; top: -48px; right: -36px; }
 .pedido__deco--estrela { width: 52px; top: -24px; right: 28px; }
-.pedido__deco--estrela > svg { animation-name: flutua2; animation-delay: -2s; }
+.pedido__deco--estrela { animation-name: flutua2; animation-delay: -2s; }
 @media (max-width: 640px) { .pedido__deco--estrela { width: 44px; right: 20px; } }
 
 /* ---------- 13 · FAQ ---------- */
@@ -698,14 +697,14 @@ main > section.cinema { max-width: none; padding-inline: 0; margin-block: clamp(
 .final__ceu { position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); pointer-events: none;
   background: radial-gradient(50% 60% at 50% 60%, #F7F0FF 0%, rgba(247, 240, 255, 0) 70%), radial-gradient(30% 40% at 85% 30%, #FDEBF5 0%, rgba(253, 235, 245, 0) 70%); }
 .final__o { position: absolute; }
-.final__o > svg { animation: flutua 9s ease-in-out infinite; }
+.final__o { animation: flutua 9s ease-in-out infinite; }
 .final__o--n1 { top: 10%; left: 4%; width: clamp(140px, 18vw, 240px); }
 .final__o--n2 { bottom: 6%; right: 4%; width: clamp(160px, 20vw, 280px); }
-.final__o--n2 > svg { animation-delay: -4s; }
+.final__o--n2 { animation-delay: -4s; }
 .final__o--e1 { top: 14%; right: 18%; width: 54px; }
 .final__o--e2 { bottom: 24%; left: 14%; width: 40px; }
 .final__o--e3 { top: 4%; left: 48%; width: 30px; }
-.final__o--e1 > svg, .final__o--e3 > svg { animation-name: flutua2; animation-duration: 7s; }
+.final__o--e1, .final__o--e3 { animation-name: flutua2; animation-duration: 7s; }
 .final__logo { width: 200px; margin: 0 auto 28px; }
 .final h2 { font-size: clamp(2.4rem, 5.6vw, 4.8rem); max-width: 16ch; margin: 0 auto .45em; }
 .final p { max-width: 44ch; margin: 0 auto 2rem; color: var(--tinta-2); font-size: 1.15rem; }
@@ -828,8 +827,13 @@ main > section.cinema { max-width: none; padding-inline: 0; margin-block: clamp(
 .jornada { contain: strict; }
 .parado, .parado * { animation-play-state: paused !important; } /* loops param fora do ecrã */
 html.pre .hero__texto, html.pre .hero__cena { opacity: 0; } /* evita o "piscar" antes da entrada animada */
+/* Loops só depois da entrada da hero (main.js junta .loops-on); ver comentário em animar() */
+html:not(.loops-on) .obj, html:not(.loops-on) [data-obj], html:not(.loops-on) .brilho { animation-name: none; }
+/* Telemóvel/tablet: sem loops infinitos. O Chrome tende a corrê-los no processador e, num telemóvel,
+   isso trava o scroll durante os primeiros segundos. As reações ao toque continuam ativas. */
+@media (hover: none) { .obj, [data-obj], .brilho, .scroll-ind span { animation: none !important; } }
 /* Durante o scroll: loops em pausa e objetos sem hover (o browser deixa de testar o rato a cada frame) */
-.a-rolar .obj > svg, .a-rolar [data-obj] > svg, .a-rolar .brilho, .a-rolar .scroll-ind span { animation-play-state: paused; }
+.a-rolar .obj, .a-rolar [data-obj], .a-rolar .brilho, .a-rolar .scroll-ind span { animation-play-state: paused; }
 .a-rolar .obj, .a-rolar .nv, .a-rolar .hs, .a-rolar [data-tilt] { pointer-events: none !important; }
 @media (max-width: 900px) {
   .topo::before { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255, 255, 255, .97); } /* desfoque custa caro no telemóvel */
