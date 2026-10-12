@@ -720,10 +720,18 @@ main > section.cinema { max-width: none; padding-inline: 0; margin-block: clamp(
 .rodape__contactos a { text-decoration: none; }
 .rodape__contactos a:hover { color: var(--roxo); }
 .rodape__nota { margin: 0; }
-.rodape__credito { margin: 0; }
+/* Crédito em destaque: rótulo pequeno por cima, nome grande em serifa, cartão que reage ao hover */
+.rodape__credito {
+  display: inline-flex; flex-direction: column; gap: 2px; padding: 12px 20px 13px; border-radius: 18px;
+  background: var(--rosa-50, #FFF0F7); border: 1.5px solid #FFD3E8; text-decoration: none; color: var(--tinta);
+  transition: transform .3s var(--ease), border-color .3s, box-shadow .3s;
+}
+.rodape__credito:hover { transform: translateY(-2px); border-color: var(--rosa, #EC3A97); box-shadow: 0 14px 26px -18px rgba(236, 58, 151, .7); }
+.rodape__credito-rot { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-2); }
+.rodape__credito-nome { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-titulo); font-size: 1.45rem; line-height: 1.15; color: var(--rosa-texto); }
+.rodape__credito-nome svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
+.rodape__credito:hover .rodape__credito-nome svg { transform: translate(2px, -2px); }
 @media (max-width: 640px) { .rodape { padding-bottom: 96px; } .rodape__in, .rodape__esq { flex-direction: column; align-items: flex-start; } }
-.rodape__credito a { color: var(--rosa-texto); font-weight: 800; text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; transition: background-size .3s var(--ease); }
-.rodape__credito a:hover { background-size: 100% 2px; }
 .flutuante.on.no-fim { transform: translateY(140%); }
 
 /* ---------- Botão flutuante ---------- */
