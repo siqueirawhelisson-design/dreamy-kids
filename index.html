@@ -15,18 +15,10 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Young+Serif&display=swap" rel="stylesheet">
+  <!-- fontes alojadas no próprio site e pré-carregadas: chegam antes do primeiro desenho (sem redesenhar a página) -->
+  <link rel="preload" href="assets/fonts/figtree-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/youngserif-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/styles.css">
-  <script>
-    // Esconde a hero até a animação de entrada arrancar (só no computador: no telemóvel não há entrada animada);
-    // se algo falhar, mostra tudo ao fim de 2,5 s
-    if (!matchMedia("(prefers-reduced-motion: reduce)").matches && matchMedia("(min-width: 900px) and (hover: hover) and (pointer: fine)").matches) {
-      document.documentElement.classList.add("pre");
-      setTimeout(function () { document.documentElement.classList.remove("pre"); }, 2500);
-    }
-  </script>
   <link rel="preload" as="image" href="assets/img/logo.webp">
   <link rel="preload" as="image" href="assets/img/hero-criancas.webp" imagesrcset="assets/img/hero-criancas-900.webp 820w, assets/img/hero-criancas.webp 1300w" imagesizes="(max-width: 900px) 110vw, 66vw">
 </head>

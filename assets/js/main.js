@@ -385,38 +385,26 @@
   function animar() {
     var gsap = window.gsap, raiz = document.documentElement, h1 = $("[data-split]");
     var ligarLoops = function () { h1.classList.add("livre"); raiz.classList.add("loops-on"); };
-    if (!gsap || reduz) { raiz.classList.add("sem-anim"); raiz.classList.remove("pre"); ligarLoops(); return; }
+    if (!gsap || reduz) { raiz.classList.add("sem-anim"); ligarLoops(); return; }
     raiz.classList.add("anim");
     partirTitulo(h1); // as letras do título reagem ao toque/rato (hero-fx.js) em qualquer ecrã
     comRevelar = true; // as revelações ligam-se no fim do arranque, depois de as secções estarem montadas
 
     // Telemóvel/tablet: sem entrada animada; a hero aparece logo e o processador fica livre para o scroll
     var computador = window.matchMedia("(min-width: 900px)").matches && temRato;
-    if (!computador) { raiz.classList.remove("pre"); ligarLoops(); return; }
+    if (!computador) { ligarLoops(); return; }
 
-    // Computador: entrada da hero. Os loops CSS só arrancam no fim (ver CSS .loops-on).
-    var tl = gsap.timeline({ defaults: { ease: "power3.out" }, onComplete: ligarLoops });
-    tl.from(".topo__in > *", { opacity: 0, duration: 0.6, stagger: 0.06 })
-      .from(".hero .eyebrow", { y: 14, opacity: 0, duration: 0.5 }, 0.15)
-      .from(".w__i", { yPercent: 110, duration: 0.85, stagger: 0.04 }, 0.15)
-      .from(".hero__sub, .hero__ctas", { y: 18, opacity: 0, duration: 0.7, stagger: 0.1 }, 0.5)
-      .from(".hero__criancas", { opacity: 0, y: 36, scale: 0.97, duration: 1.15, ease: "expo.out" }, 0.05)
-      .from(".hero__aura", { opacity: 0, scale: 0.8, duration: 1.4, ease: "expo.out" }, 0.1)
-      .from(".fita", { strokeDasharray: "0 1600", duration: 1.8, ease: "power2.inOut", stagger: 0.2 }, 0.3)
-      .from(".hero__cena > .obj, .hero__nuvens .nv", { scale: 0, opacity: 0, duration: 0.75, stagger: 0.05, ease: "back.out(1.7)", clearProps: "transform,opacity" }, 0.45)
-      .from(".scroll-ind", { opacity: 0, duration: 0.6 }, 1.2);
-    raiz.classList.remove("pre");
-
-    // ScrollTrigger só faz falta no computador (parallax e linha da jornada): carrega-se à parte, depois da entrada
+    // Computador: a entrada da hero é feita em CSS (só opacity/translate, ver "Entrada da hero" no styles.css).
+    ligarLoops();
+    // ScrollTrigger (parallax e linha da jornada) carrega-se à parte, quando o browser estiver livre:
+    // o refresh mede a página toda e não deve chocar com a entrada
     var st = document.createElement("script");
     st.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js";
     st.onload = function () { extrasComputador(gsap, window.ScrollTrigger); };
-    // só quando o browser estiver livre (o refresh mede a página toda e chocava com o fim da entrada da hero)
     var carregar = function () { document.body.appendChild(st); };
-    tl.eventCallback("onComplete", function () {
-      ligarLoops();
-      if ("requestIdleCallback" in window) requestIdleCallback(carregar, { timeout: 4000 }); else setTimeout(carregar, 1500);
-    });
+    setTimeout(function () {
+      if ("requestIdleCallback" in window) requestIdleCallback(carregar, { timeout: 3000 }); else carregar();
+    }, 1200);
   }
 
   function extrasComputador(gsap, ST) {

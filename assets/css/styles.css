@@ -1,3 +1,7 @@
+/* Fontes alojadas no site (latin, cobre PT). Figtree é variável: um só ficheiro para os pesos 400 a 800. */
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 400 800; font-display: swap; src: url("../fonts/figtree-latin.woff2") format("woff2"); }
+@font-face { font-family: "Young Serif"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/youngserif-latin.woff2") format("woff2"); }
+
 /* =========================================================
    DREAMY KIDS · sistema visual
    Branco protagonista (80%), cores do logótipo como acento.
@@ -755,7 +759,7 @@ main > section.cinema { max-width: none; padding-inline: 0; margin-block: clamp(
   .hero__criancas, .hero__fx { left: -4%; width: 108%; bottom: 12%; }
   .hero__o--pipocas2 { top: 4%; left: 40%; width: 14%; }
   .hero__o--comando { top: 0; right: 6%; width: 22%; }
-  .hero__o--pipocas { top: 22%; width: 13%; }
+  .hero__o--pipocas { top: 24%; left: 2%; right: auto; width: 12%; } /* à direita ficava na cabeça do menino */
   .hero__o--slime { left: 14%; width: 21%; }
   .hero__o--e2 { top: 6%; left: 12%; width: 7%; }
   .hero__o--e3, .b5, .b7 { display: none; }
@@ -813,9 +817,17 @@ main > section.cinema { max-width: none; padding-inline: 0; margin-block: clamp(
 [data-speed], [data-depth] { will-change: transform; }
 .jornada { contain: strict; }
 .parado, .parado * { animation-play-state: paused !important; } /* loops param fora do ecrã */
-html.pre .hero__texto, html.pre .hero__cena { opacity: 0; } /* evita o "piscar" antes da entrada animada */
 /* Loops só depois da entrada da hero (main.js junta .loops-on); ver comentário em animar() */
 html:not(.loops-on) .obj, html:not(.loops-on) [data-obj], html:not(.loops-on) .brilho { animation-name: none; }
+/* Entrada da hero (computador): três blocos a aparecer com fade e um leve deslizar.
+   Substitui a coreografia antiga em GSAP (letra a letra, 13 objetos, fitas), que corria no processador e travava a abertura. */
+@media (min-width: 900px) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .topo__in { animation: entra-topo .6s cubic-bezier(.22, 1, .36, 1) both; }
+  .hero__texto { animation: entra .8s .1s cubic-bezier(.22, 1, .36, 1) both; }
+  .hero__cena { animation: entra .9s .25s cubic-bezier(.22, 1, .36, 1) both; }
+}
+@keyframes entra { from { opacity: 0; translate: 0 22px; } to { opacity: 1; translate: none; } }
+@keyframes entra-topo { from { opacity: 0; } to { opacity: 1; } }
 /* Revelações ao rolar (main.js: revelar). translate/scale são propriedades à parte do transform,
    por isso não chocam com o tilt e o hover dos cartões; as classes saem no fim. */
 .rv { opacity: 0; translate: 0 26px; }
