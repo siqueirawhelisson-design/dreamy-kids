@@ -372,12 +372,12 @@
       es.forEach(function (e) {
         if (!e.isIntersecting) return;
         var el = e.target; io.unobserve(el);
-        el.style.transitionDelay = Math.min(k++, 5) * 80 + "ms"; // cascata no que entra junto
+        el.style.transitionDelay = Math.min(k++, 4) * 60 + "ms"; // cascata no que entra junto
         el.classList.add("rv-in");
         // no fim limpa tudo, para devolver transform/transition ao CSS normal (tilt, hover dos cartões)
-        setTimeout(function () { el.classList.remove("rv", "rv-media", "rv-in"); el.style.transitionDelay = ""; }, 1400);
+        setTimeout(function () { el.classList.remove("rv", "rv-media", "rv-in"); el.style.transitionDelay = ""; }, 1200);
       });
-    }, { rootMargin: "0px 0px -10% 0px" });
+    }, { rootMargin: "0px 0px -4% 0px" }); // revela logo que entra, para não se ver espaço vazio a rolar
     alvos.forEach(function (el) { io.observe(el); });
   }
 
