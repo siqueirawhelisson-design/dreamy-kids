@@ -64,8 +64,8 @@
         .to(p, { y: "+=" + rnd(90, 160), x: "+=" + rnd(-20, 20), rotation: "+=" + rnd(-200, 200), opacity: 0, duration: rnd(0.8, 1.2), ease: "power1.in" });
     }
   }
-  // Na foto só fica a festa (confettis nos punhos do menino). Slime, fone e comando saíram:
-  // o slime aplicava um filtro de distorção sobre a fotografia e era o efeito mais pesado do site.
+  // Confettis nos punhos do menino. O slime e o comando têm efeitos próprios (secções 4 e 5);
+  // o slime antigo aplicava um filtro de distorção sobre a fotografia inteira e era o efeito mais pesado do site.
   var EFEITOS = {
     festa: function () { confettis(21, 4, 16); confettis(60, 4, 16); }
   };
@@ -133,6 +133,144 @@
     }, { passive: true });
   }
 
-  function iniciar() { letras(); zonas(); rasto(); }
+  /* ---------- 4. Slime da menina: estica para onde vai o rato e balança como geleia ----------
+     Leve de propósito: só a área do slime (canvas pequeno, desenhado em faixas de 3 px),
+     só enquanto o rato está por cima ou a geleia ainda balança; parado, o canvas fica vazio e não custa nada.
+     O antigo efeito com filtro de distorção sobre a foto inteira é que pesava. */
+  var FW = 1300, FH = 725; // coordenadas da fotografia original (hero-criancas.webp)
+  function caixa(el, x0, y0, x1, y1) {
+    el.style.left = x0 / FW * 100 + "%"; el.style.top = y0 / FH * 100 + "%";
+    el.style.width = (x1 - x0) / FW * 100 + "%"; el.style.height = (y1 - y0) / FH * 100 + "%";
+  }
+  function slime() {
+    var img = $(".hero__criancas img");
+    if (!fx || !img) return;
+    // contorno da geleia: borda de cima (esquerda → direita) e de baixo (direita → esquerda)
+    var CIMA = [[107,383],[135,372],[167,365],[190,382],[210,407],[240,438],[275,463],[320,485],[370,497],[420,500],[460,495],[495,482],[517,476],[532,477]];
+    var BAIXO = [[527,555],[490,560],[440,570],[385,580],[340,578],[295,565],[250,545],[210,520],[175,490],[145,460],[120,430],[107,405]];
+    var X0 = 95, Y0 = 340, X1 = 545, Y1 = 645, cw = X1 - X0, ch = Y1 - Y0;
+    var PONTA_E = 107, PONTA_D = 532; // as mãos seguram aqui: estas pontas não mexem
+
+    var cv = document.createElement("canvas");
+    cv.className = "fx-slime"; cv.width = cw; cv.height = ch; caixa(cv, X0, Y0, X1, Y1);
+    fx.insertBefore(cv, fx.firstChild);
+    // zona de toque com a forma da geleia (e um pouco abaixo dela, para dar para puxar)
+    var zona = document.createElement("span");
+    zona.className = "hs hs--slime"; caixa(zona, X0, Y0, X1, Y1);
+    zona.style.clipPath = "polygon(" + CIMA.concat(BAIXO.map(function (p) { return [p[0], p[1] + 60]; })).map(function (p) {
+      return ((p[0] - X0) / cw * 100).toFixed(1) + "% " + ((p[1] - Y0) / ch * 100).toFixed(1) + "%";
+    }).join(",") + ")";
+    fx.appendChild(zona);
+
+    var ctx = cv.getContext("2d"), fonte = null, bruta = null;
+    function preparar() { // recorta a geleia da foto, uma única vez, no primeiro toque
+      // lê-se de uma cópia sem srcset: na <img> o naturalWidth vem corrigido pela densidade do ecrã
+      var k = bruta.naturalWidth / FW;
+      fonte = document.createElement("canvas"); fonte.width = cw; fonte.height = ch;
+      var f = fonte.getContext("2d");
+      f.drawImage(bruta, X0 * k, Y0 * k, cw * k, ch * k, 0, 0, cw, ch);
+      var m = document.createElement("canvas"); m.width = cw; m.height = ch;
+      var mc = m.getContext("2d");
+      mc.filter = "blur(2px)"; mc.beginPath();
+      CIMA.concat(BAIXO).forEach(function (p) { mc.lineTo(p[0] - X0, p[1] - Y0); });
+      mc.closePath(); mc.fill();
+      f.globalCompositeOperation = "destination-in"; f.drawImage(m, 0, 0);
+      // o mesmo desvanecer que a foto tem em baixo (mask-image 76% → 98%)
+      var g = f.createLinearGradient(0, -Y0, 0, FH - Y0);
+      g.addColorStop(0.76, "#000"); g.addColorStop(0.98, "rgba(0,0,0,0)");
+      f.fillStyle = g; f.fillRect(0, 0, cw, ch);
+    }
+    function interp(lista, x) { // altura de uma borda num dado x
+      for (var i = 0; i < lista.length - 1; i++) {
+        var a = lista[i], b = lista[i + 1];
+        if ((x - a[0]) * (x - b[0]) <= 0 && a[0] !== b[0]) return a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]);
+      }
+      return null;
+    }
+    var BAIXO_ORD = BAIXO.slice().reverse();
+
+    var amp = 0, vel = 0, alvo = 0, foco = 0.5, dentro = false, raf = 0;
+    function desenhar() {
+      ctx.clearRect(0, 0, cw, ch);
+      var L = PONTA_E - X0, R = PONTA_D - X0;
+      for (var x = 0; x < cw; x += 3) {
+        var t = (x - L) / (R - L), dy = 0;
+        if (t > 0 && t < 1) {
+          var s = Math.sin(Math.PI * t), perto = Math.exp(-Math.pow((t - foco) / 0.3, 2));
+          dy = amp * s * s * (0.45 + 0.55 * perto); // estica mais onde está o rato
+        }
+        // a borda de baixo desce mais do que a de cima: parece esticar, não deslizar
+        ctx.drawImage(fonte, x, 0, 3, ch, x, dy * 0.45, 3, ch + dy * 0.55);
+      }
+    }
+    function passo() {
+      vel += (alvo - amp) * 0.11; vel *= 0.84; amp += vel; // mola com balanço de geleia
+      desenhar();
+      if (dentro || Math.abs(vel) > 0.03 || Math.abs(amp - alvo) > 0.05) raf = requestAnimationFrame(passo);
+      else { raf = 0; amp = vel = 0; ctx.clearRect(0, 0, cw, ch); } // parado: canvas vazio, a foto original volta a ver-se
+    }
+    function arrancar() {
+      if (!bruta) { bruta = new Image(); bruta.onload = arrancar; bruta.src = img.currentSrc || img.src; } // já está em cache
+      if (!bruta.complete || !bruta.naturalWidth) return false;
+      if (!fonte) preparar();
+      if (!raf) raf = requestAnimationFrame(passo);
+      return true;
+    }
+    function posicao(e) {
+      var r = zona.getBoundingClientRect();
+      return { x: X0 + (e.clientX - r.left) / r.width * cw, y: Y0 + (e.clientY - r.top) / r.height * ch };
+    }
+    if (temRato) {
+      zona.addEventListener("pointerenter", function () { dentro = true; arrancar(); });
+      zona.addEventListener("pointermove", function (e) {
+        var p = posicao(e), c = interp(CIMA, p.x), b = interp(BAIXO_ORD, p.x);
+        foco = Math.min(1, Math.max(0, (p.x - PONTA_E) / (PONTA_D - PONTA_E)));
+        if (c !== null && b !== null) alvo = Math.max(-12, Math.min(28, (p.y - (c + b) / 2) * 0.75));
+        vel += Math.max(-1.5, Math.min(1.5, e.movementY * 0.08)); // um abanão quando o rato passa depressa
+      });
+      zona.addEventListener("pointerleave", function () { dentro = false; alvo = 0; });
+    }
+    // no toque (e no clique): a geleia dá um salto e balança
+    zona.addEventListener("click", function (e) {
+      var p = posicao(e);
+      foco = Math.min(1, Math.max(0, (p.x - PONTA_E) / (PONTA_D - PONTA_E)));
+      vel += 5; if (!temRato) alvo = 0;
+      arrancar();
+    });
+  }
+
+  /* ---------- 5. Comando do menino: a barra de luz acende em cores e saltam os símbolos dos botões ---------- */
+  function comando() {
+    if (!fx) return;
+    var luz = document.createElement("span");
+    luz.className = "fx-luz"; caixa(luz, 1036, 545, 1088, 561);
+    fx.appendChild(luz);
+    var zona = document.createElement("span");
+    zona.className = "hs hs--comando"; caixa(zona, 985, 522, 1140, 600);
+    fx.appendChild(zona);
+    var SIMBOLOS = [["△", "#22B5EE"], ["○", "#EC3A97"], ["✕", "#8B52E0"], ["□", "#FFBE3D"]];
+    var ultimo = 0, tApagar = 0;
+    function botoes() {
+      var agora = Date.now(); if (agora - ultimo < 900) return; ultimo = agora;
+      SIMBOLOS.forEach(function (s, i) {
+        var p = particula("fx--nota fx--simbolo", 80 + rnd(-1.5, 1.5) + (i - 1.5) * 2.2, 74, s[0]);
+        p.style.color = s[1];
+        gsap.timeline({ delay: i * 0.07, onComplete: p.remove.bind(p) })
+          .fromTo(p, { y: 0, scale: 0.4, opacity: 0 }, { y: rnd(-70, -50), x: (i - 1.5) * rnd(14, 22), scale: 1, opacity: 1, rotation: rnd(-25, 25), duration: 0.45, ease: "back.out(2)" })
+          .to(p, { y: "-=30", opacity: 0, duration: 0.5, ease: "power1.in" }, "+=0.15");
+      });
+    }
+    function acender(ms) {
+      clearTimeout(tApagar); luz.classList.add("on");
+      if (ms) tApagar = setTimeout(function () { luz.classList.remove("on"); }, ms);
+    }
+    if (temRato) {
+      zona.addEventListener("pointerenter", function () { if (document.documentElement.classList.contains("a-rolar")) return; acender(); botoes(); });
+      zona.addEventListener("pointerleave", function () { tApagar = setTimeout(function () { luz.classList.remove("on"); }, 500); });
+    }
+    zona.addEventListener("click", function () { acender(1600); botoes(); });
+  }
+
+  function iniciar() { letras(); zonas(); rasto(); slime(); comando(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar); else iniciar();
 })();
